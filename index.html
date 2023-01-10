@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proračun</title>
+    <link rel="icon" href="img/favicon.ico" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css">
+    <script src="dijabaz.js"></script>
+    <!--<script src="krecnjak.js"></script>-->
+  </head>
+  <body>
+    <nav class="navbar navbar-expand navbar-light bg-light">
+      <div class="container">
+        <a href="index.html" class="navbar-brand text-dark text-center"><h3>Proračun</h3></a>
+
+        <ul class="navbar-nav">
+          <!--<li class="nav-item">
+                    <a href="evidencija.php" class="nav-link text-white">Dodaj u evidenciju</a>
+                </li>-->
+        </ul>
+      </div>
+    </nav>
+    <!-- Example single danger button -->
+    <div class="container-fluid">
+    <div class="row">
+      <div class="col-2 mt-3" style="position:fixed;">
+        <div class="list-group" id="list-tab" role="tablist">
+          <a
+            class="list-group-item list-group-item-action active"
+            id="list-home-list"
+            data-toggle="list"
+            href="#list-home"
+            role="tab"
+            aria-controls="home"
+            >Dijabaz</a
+          >
+          <a
+            class="list-group-item list-group-item-action"
+            id="list-profile-list"
+            data-toggle="list"
+            href="#list-profile"
+            role="tab"
+            aria-controls="profile"
+            >Krečnjak</a
+          >
+        </div>
+
+        <input
+          type="text"
+          id="nazivKamena"
+          name="nazivKamena"
+          class="form-control mt-5"
+          placeholder="Unesi naziv novog kamena"
+        />
+        <button
+          id="unesiNoviKamen"
+          
+          class="btn btn-success form-control mt-2"
+          onclick="addField()"
+        >
+          Potvrdi
+        </button>
+      </div>
+
+      <div class="col-8 mt-3" style="margin-left:16.5%">
+        <div class="tab-content" id="nav-tabContent">
+          <!--Dijabaz-->
+          <div
+            class="tab-pane fade show active"
+            id="list-home"
+            role="tabpanel"
+            aria-labelledby="list-home-list"
+          >
+          <!--Dugmad-->
+          <div class="col-2 " style="position: absolute; left: 80%">
+            <button type="button" class="btn btn-primary col-2" style="height:50px; position:fixed;" data-toggle="modal" data-target="#exampleModalCenter">
+              Prikaži Linijski grafikon
+            </button>
+            <!-- Modal Linijski grafikon-->
+            <div class="modal fade" id="exampleModalCenter"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered"  role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Postotak prolaska materijala kroz sito</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">X</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    
+                    <canvas id="myChart" width="400" height="200"></canvas>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Izađi</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!--Dugme Bar grafikon-->
+            <button type="button" class="btn btn-danger mt-2 col-2" style="height:50px; position:fixed; top:150px;" data-toggle="modal" data-target="#exampleModalCenter2">
+              Prikaži Bar grafikon
+            </button>
+            <!-- Modal Bar grafikon-->
+            <div class="modal fade" id="exampleModalCenter2"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered"  role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Učešće pojedinih frakcija</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <canvas id="myChartBarDijabaz" width="400" height="200"></canvas>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Izađi</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive col-11">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Naziv</th>
+                      <th scope="col">Oznaka</th>
+                      <th scope="col">Mjerna jedinica</th>
+                      <th scope="col">Podaci za He=10</th>
+                      <th scope="col">Podaci za He=5</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Zapremina stijenske mase koja se minira (bloka)</td>
+                      <td>V<sub>b</sub></td>
+                      <td>m&#179;</td>
+                      <td>112</td>
+                      <td>55</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Koeficijent otpora stijene pri miniranju po Kuznecovu (8-12)</td>
+                      <td>K</td>
+                      <td>-</td>
+                      <td>10</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td>Visina etaže</td>
+                      <td>H<sub>e</sub></td>
+                      <td>m</td>
+                      <td>10,00</td>
+                      <td>5,00</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">4</th>
+                        <td>Podbušenje</td>
+                        <td>L<sub>p</sub></td>
+                        <td>m</td>
+                        <td>1,00</td>
+                        <td>0,90</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">5</th>
+                        <td>Eskplozivno punjenje (bez podbušenja)</td>
+                        <td>L<sub>ex</sub></td>
+                        <td>m</td>
+                        <td>7,30</td>
+                        <td>1,90</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">6</th>
+                        <td>Ukupno eksplozivno punjenje</td>
+                        <td>L<sub>uk(ex)</sub></td>
+                        <td>m</td>
+                        <td>8,30</td>
+                        <td>2,80</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">7</th>
+                        <td>Dužina čepa</td>
+                        <td>L<sub>č</sub></td>
+                        <td>m</td>
+                        <td>3,70</td>
+                        <td>3.40</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">8</th>
+                        <td>Rastojanje između bušotina u redu</td>
+                        <td>a</td>
+                        <td>m</td>
+                        <td>3,00</td>
+                        <td>2,75</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">9</th>
+                        <td>Rastojanje između redova (izbojnica)</td>
+                        <td>W=b</td>
+                        <td>m</td>
+                        <td>3,50</td>
+                        <td>3,23</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">10</th>
+                        <td>Količina eksploziva po bušotini</td>
+                        <td>Q<sub>b</sub></td>
+                        <td>kg</td>
+                        <td>41,43</td>
+                        <td>18,99</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">11</th>
+                        <td>Prečnik krune bušenja</td>
+                        <td>&#966;</td>
+                        <td>mm</td>
+                        <td>89,00</td>
+                        <td>89,00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">12</th>
+                        <td>Relativna snaga primijenjenog eksploziva u odnosu na AN-FO</td>
+                        <td>E</td>
+                        <td>-</td>
+                        <td>109,00</td>
+                        <td>109,00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">13</th>
+                        <td>Devijacija bušotine (0,1-0,2 m)</td>
+                        <td>p</td>
+                        <td>m</td>
+                        <td>0,15</td>
+                        <td>0,10</td>
+                      </tr>
+                      
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th colspan="6" class="text-center" scope="col">Rezultati proračuna</th>
+                    </tr>
+                    
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Srednja veličina komada po Kuznecov za bilo koju vrstu eksploziva</td>
+                      <td>X</td>
+                      <td>cm</td>
+                      <td>42,64</td>
+                      <td>39,56</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Koeficijent ujednačenosti (Rosin-Rammler eksponent)</td>
+                      <td>n</td>
+                      <td>-</td>
+                      <td>1,23</td>
+                      <td>0,79</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td>Karakteristična vrijednost krupnoće</td>
+                      <td>X<sub>c</sub></td>
+                      <td>cm</td>
+                      <td>57,45</td>
+                      <td>62,93</td>
+                    </tr>
+                  </tbody>
+              </table>
+          </div>
+          
+          <div class="table-responsive col-11 mt-4">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="6" class="text-center" scope="col">Prognoza učešća granulometrijskog sastava odminirane mase za He=10 m</th>
+                  </tr>
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Otvor sita x (cm)</th>
+                      <th scope="col">-(x/x<sub>c</sub>)<sup>n</sup></th>
+                      <th scope="col">R (zadržava se na situ)</th>
+                      <th scope="col">R (prolazi kroz sito)</th>
+                      <th scope="col">Učešće pojedinih frakcija</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="col" rowspan="15" class="align-middle" >Zastupljenost komada odminiranog materijala ili procentualna <br>zastupljenost komada većih od x (cm) određena na osnovu jednačine Rosin i Rammler</th>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>100%</td>
+                      <td>0,00%</td>
+                      <td>0,00%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>1</td>
+                      <td>-0,00686</td>
+                      <td>99,32%</td>
+                      <td>0,68%</td>
+                      <td>0,68%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>2</td>
+                      <td>-0,01371</td>
+                      <td>98,64%</td>
+                      <td>1,36%</td>
+                      <td>0,68%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>4</td>
+                      <td>-0,02742</td>
+                      <td>37,30%</td>
+                      <td>2,70%</td>
+                      <td>1,34%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>8</td>
+                      <td>-0,05485</td>
+                      <td>94,66%</td>
+                      <td>5,34%</td>
+                      <td>2,63%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>16</td>
+                      <td>-0,10970</td>
+                      <td>89,61%</td>
+                      <td>10,39%</td>
+                      <td>5,05%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>32</td>
+                      <td>-0,23939</td>
+                      <td>80,30%</td>
+                      <td>19,70%</td>
+                      <td>9,31%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>64</td>
+                      <td>-0,43879</td>
+                      <td>64,48%</td>
+                      <td>35,52%</td>
+                      <td>15,82%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>128</td>
+                      <td>-0,87757</td>
+                      <td>41,58%</td>
+                      <td>58,42%</td>
+                      <td>22,90%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>256</td>
+                      <td>-1,75515</td>
+                      <td>17,29%</td>
+                      <td>82,71%</td>
+                      <td>24,29%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>512</td>
+                      <td>-3,51029</td>
+                      <td>2,99%</td>
+                      <td>97,07%</td>
+                      <td>14,30%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>1024</td>
+                      <td>-7,02058</td>
+                      <td>0,09%</td>
+                      <td>99,91%</td>
+                      <td>2,90%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>2048</td>
+                      <td>-14,04117</td>
+                      <td>0,00%</td>
+                      <td>100,00%</td>
+                      <td>0,09%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>4096</td>
+                      <td>-28,08233</td>
+                      <td>0,00%</td>
+                      <td>100,00%</td>
+                      <td>0,00%</td>
+                    </tr>
+                    <tr>
+                                
+                      <td colspan="4">Ukupno</td>
+                      <td>100,00%</td>
+                    </tr>
+                  </tbody>
+              </table>
+            </div>
+                    <!--zadnja tabela-->
+                    <div class="table-responsive col-11 mt-4">
+                      <table class="table table-striped table-hover table-bordered">
+                          <thead>
+                            <tr>
+                              <th colspan="6" class="text-center" scope="col">Prognoza učešća granulometrijskog sastava odminirane mase za He=5 m</th>
+                            </tr>
+                              <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Otvor sita x (cm)</th>
+                                <th scope="col">-(x/x<sub>c</sub>)<sup>n</sup></th>
+                                <th scope="col">R (zadržava se na situ)</th>
+                                <th scope="col">R (prolazi kroz sito)</th>
+                                <th scope="col">Učešće pojedinih frakcija</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="col" rowspan="15" class="align-middle" >Zastupljenost komada odminiranog materijala ili procentualna <br>zastupljenost komada većih od x (cm) određena na osnovu jednačine Rosin i Rammler</th>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>100%</td>
+                                <td>0,00%</td>
+                                <td>0,00%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>1</td>
+                                <td>-0,037923</td>
+                                <td>96,28%</td>
+                                <td>3,72%</td>
+                                <td>3,72%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>2</td>
+                                <td>-0,075846</td>
+                                <td>92,70%</td>
+                                <td>7,30%</td>
+                                <td>3,58%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>4</td>
+                                <td>-0,151692</td>
+                                <td>85,93%</td>
+                                <td>14,07%</td>
+                                <td>6,77%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>8</td>
+                                <td>-0,303384</td>
+                                <td>73,83%</td>
+                                <td>26,17%</td>
+                                <td>12,09%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>16</td>
+                                <td>-0,606768</td>
+                                <td>54,51%</td>
+                                <td>45,49%</td>
+                                <td>19,32%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>32</td>
+                                <td>-1,213535</td>
+                                <td>29,72%</td>
+                                <td>70,28%</td>
+                                <td>24,80%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>64</td>
+                                <td>-2,42707</td>
+                                <td>8,83%</td>
+                                <td>91,17%</td>
+                                <td>20,89%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>128</td>
+                                <td>-4,854141</td>
+                                <td>0,78%</td>
+                                <td>99,22%</td>
+                                <td>8,05%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>256</td>
+                                <td>-9,708281</td>
+                                <td>0,01%</td>
+                                <td>99,99%</td>
+                                <td>0,77%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>512</td>
+                                <td>-19,41656</td>
+                                <td>0,00%</td>
+                                <td>100,00%</td>
+                                <td>0,01%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>1024</td>
+                                <td>-38,83313</td>
+                                <td>0,00%</td>
+                                <td>100,00%</td>
+                                <td>0,00%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>2048</td>
+                                <td>-77,66625</td>
+                                <td>0,00%</td>
+                                <td>100,00%</td>
+                                <td>0,00%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>4096</td>
+                                <td>-155,3325</td>
+                                <td>0,00%</td>
+                                <td>100,00%</td>
+                                <td>0,00%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td colspan="4">Ukupno</td>
+                                <td>100,00%</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                      </div>
+                      <!--KRAJ ZADNJE TABELE-->  
+                      
+                      <!--Dugme Linijski grafikon-->
+          </div>
+          <!--Krecnjak-->
+          <div
+            class="tab-pane fade"
+            id="list-profile"
+            role="tabpanel"
+            aria-labelledby="list-profile-list"
+          >
+          <!--Grafikoni-->
+          <div class="col-2 " style="position: absolute; left: 80%">
+            <button type="button" class="btn btn-primary col-2" style="height:50px;position:fixed;" data-toggle="modal" data-target="#exampleModalCenterKrecnjak">
+              Prikaži Linijski grafikon
+            </button>
+            <!-- Modal Linijski grafikon-->
+            <div class="modal fade" id="exampleModalCenterKrecnjak"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered"  role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Postotak prolaska materijala kroz sito</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    
+                    <canvas id="myChartKrecnjak" width="400" height="200"></canvas>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Izađi</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!--Dugme Bar grafikon-->
+            <button type="button" class="btn btn-danger mt-2 col-2" style="height:50px; position: fixed; top:150px;" data-toggle="modal" data-target="#exampleModalCenterKrecnjak2">
+              Prikaži Bar grafikon
+            </button>
+            <!-- Modal Linijski grafikon-->
+            <div class="modal fade" id="exampleModalCenterKrecnjak2"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered"  role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Učešće pojedinih frakcija</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <canvas id="myChartBarKrecnjak" width="400" height="200"></canvas>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Izađi</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive col-11">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Naziv</th>
+                      <th scope="col">Oznaka</th>
+                      <th scope="col">Mjerna jedinica</th>
+                      <th scope="col">Podaci za He=10</th>
+                      <th scope="col">Podaci za He=15</th>
+                      <th scope="col">Podaci za He=20</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Zapremina stijenske mase koja se minira (bloka)</td>
+                      <td>V<sub>b</sub></td>
+                      <td>m&#179</td>
+                      <td>115</td>
+                      <td>255</td>
+                      <td>340</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Koeficijent otpora stijene pri miniranju po Kuznecovu (8-12)</td>
+                      <td>K</td>
+                      <td>-</td>
+                      <td>9</td>
+                      <td>9</td>
+                      <td>9</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td>Visina etaže</td>
+                      <td>H<sub>e</sub></td>
+                      <td>m</td>
+                      <td>10,00</td>
+                      <td>15,00</td>
+                      <td>20,00</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">4</th>
+                        <td>Podbušenje</td>
+                        <td>L<sub>p</sub></td>
+                        <td>m</td>
+                        <td>1,06</td>
+                        <td>1,54</td>
+                        <td>2,12</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">5</th>
+                        <td>Eskplozivno punjenje (bez podbušenja)</td>
+                        <td>L<sub>ex</sub></td>
+                        <td>m</td>
+                        <td>6,89</td>
+                        <td>12,21</td>
+                        <td>17,53</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">6</th>
+                        <td>Ukupno eksplozivno punjenje</td>
+                        <td>L<sub>uk(ex)</sub></td>
+                        <td>m</td>
+                        <td>7,95</td>
+                        <td>13,75</td>
+                        <td>19,65</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">7</th>
+                        <td>Dužina čepa</td>
+                        <td>L<sub>č</sub></td>
+                        <td>m</td>
+                        <td>3,75</td>
+                        <td>3,75</td>
+                        <td>3,75</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">8</th>
+                        <td>Rastojanje između bušotina u redu</td>
+                        <td>a</td>
+                        <td>m</td>
+                        <td>2,70</td>
+                        <td>4,00</td>
+                        <td>4,00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">9</th>
+                        <td>Rastojanje između redova (izbojnica)</td>
+                        <td>W=b</td>
+                        <td>m</td>
+                        <td>4,00</td>
+                        <td>4,00</td>
+                        <td>4,00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">10</th>
+                        <td>Količina eksploziva po bušotini</td>
+                        <td>Q<sub>b</sub></td>
+                        <td>kg</td>
+                        <td>54,40</td>
+                        <td>81,60</td>
+                        <td>108,80</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">11</th>
+                        <td>Prečnik krune bušenja</td>
+                        <td>&#966;</td>
+                        <td>mm</td>
+                        <td>89,00</td>
+                        <td>89,00</td>
+                        <td>89,00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">12</th>
+                        <td>Relativna snaga primijenjenog eksploziva u odnosu na AN-FO</td>
+                        <td>E</td>
+                        <td>-</td>
+                        <td>100,00</td>
+                        <td>100,00</td>
+                        <td>100,00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">13</th>
+                        <td>Devijacija bušotine (0,1-0,2 m)</td>
+                        <td>p</td>
+                        <td>m</td>
+                        <td>0,10</td>
+                        <td>0,15</td>
+                        <td>0,20</td>
+                      </tr>
+                      
+                  </tbody>
+                  <thead>
+                    <tr>
+                      <th colspan="7" class="text-center" scope="col">Rezultati proračuna</th>
+                    </tr>
+                    
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Srednja veličina komada po Kuznecov za bilo koju vrstu eksploziva</td>
+                      <td>X</td>
+                      <td>cm</td>
+                      <td>34,84</td>
+                      <td>50,95</td>
+                      <td>53,46</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Koeficijent ujednačenosti (Rosin-Rammler eksponent)</td>
+                      <td>n</td>
+                      <td>-</td>
+                      <td>1,08</td>
+                      <td>1,35</td>
+                      <td>1,43</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td>Karakteristična vrijednost krupnoće</td>
+                      <td>X<sub>c</sub></td>
+                      <td>cm</td>
+                      <td>48,93</td>
+                      <td>66,85</td>
+                      <td>69,09</td>
+                    </tr>
+                  </tbody>
+              </table>
+          </div>
+          
+          <div class="table-responsive col-11 mt-4">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="6" class="text-center" scope="col">Prognoza učešća granulometrijskog sastava odminirane mase za He=10 m</th>
+                  </tr>
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col">Otvor sita x (cm)</th>
+                      <th scope="col">-(x/x<sub>c</sub>)<sup>n</sup></th>
+                      <th scope="col">R (zadržava se na situ)</th>
+                      <th scope="col">R (prolazi kroz sito)</th>
+                      <th scope="col">Učešće pojedinih frakcija</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="col" rowspan="15" class="align-middle" >Zastupljenost komada odminiranog materijala ili procentualna <br>zastupljenost komada većih od x (cm) određena na osnovu jednačine Rosin i Rammler</th>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>100%</td>
+                      <td>0,00%</td>
+                      <td>0,00%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>1</td>
+                      <td>-0,014971</td>
+                      <td>98,51%</td>
+                      <td>1,49%</td>
+                      <td>1,49%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>2</td>
+                      <td>-0,029943</td>
+                      <td>97,05%</td>
+                      <td>2,95%</td>
+                      <td>1,46%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>4</td>
+                      <td>-0,059885</td>
+                      <td>94,19%</td>
+                      <td>5,81%</td>
+                      <td>2,86%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>8</td>
+                      <td>-0,11977</td>
+                      <td>88,71%</td>
+                      <td>11,29%</td>
+                      <td>5,47%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>16</td>
+                      <td>-0,23954</td>
+                      <td>78,70%</td>
+                      <td>21,30%</td>
+                      <td>10,01%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>32</td>
+                      <td>-0,479081</td>
+                      <td>61,94%</td>
+                      <td>38,06%</td>
+                      <td>16,76%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>64</td>
+                      <td>-0,958162</td>
+                      <td>38,36%</td>
+                      <td>61,64%</td>
+                      <td>23,57%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>128</td>
+                      <td>-1,916323</td>
+                      <td>14,72%</td>
+                      <td>85,28%</td>
+                      <td>23,65%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>256</td>
+                      <td>-3,832646</td>
+                      <td>2,17%</td>
+                      <td>97,83%</td>
+                      <td>12,55%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>512</td>
+                      <td>-7,665292</td>
+                      <td>0,05%</td>
+                      <td>99,95%</td>
+                      <td>2,12%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>1024</td>
+                      <td>-15,33058</td>
+                      <td>0,00%</td>
+                      <td>100,00%</td>
+                      <td>0,05%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>2048</td>
+                      <td>-30,66117</td>
+                      <td>0,00%</td>
+                      <td>100,00%</td>
+                      <td>0,00%</td>
+                    </tr>
+                    <tr>
+                      
+                      <td>4096</td>
+                      <td>-61,32234</td>
+                      <td>0,00%</td>
+                      <td>100,00%</td>
+                      <td>0,00%</td>
+                    </tr>
+                    <tr>
+                                
+                      <td colspan="4">Ukupno</td>
+                      <td>100,00%</td>
+                    </tr>
+                  </tbody>
+              </table>
+            </div>
+                    <!--zadnja tabela-->
+                    <div class="table-responsive col-11 mt-4">
+                      <table class="table table-striped table-hover table-bordered">
+                          <thead>
+                            <tr>
+                              <th colspan="6" class="text-center" scope="col">Prognoza učešća granulometrijskog sastava odminirane mase za He=15 m</th>
+                            </tr>
+                              <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Otvor sita x (cm)</th>
+                                <th scope="col">-(x/x<sub>c</sub>)<sup>n</sup></th>
+                                <th scope="col">R (zadržava se na situ)</th>
+                                <th scope="col">R (prolazi kroz sito)</th>
+                                <th scope="col">Učešće pojedinih frakcija</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="col" rowspan="15" class="align-middle" >Zastupljenost komada odminiranog materijala ili procentualna <br>zastupljenost komada većih od x (cm) određena na osnovu jednačine Rosin i Rammler</th>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>100%</td>
+                                <td>0,00%</td>
+                                <td>0,00%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>1</td>
+                                <td>-0,003436</td>
+                                <td>99,66%</td>
+                                <td>0,34%</td>
+                                <td>0,34%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>2</td>
+                                <td>-0,006873</td>
+                                <td>99,32%</td>
+                                <td>0,68%</td>
+                                <td>0,34%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>4</td>
+                                <td>-0,03746</td>
+                                <td>98,63%</td>
+                                <td>1,37%</td>
+                                <td>0,68%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>8</td>
+                                <td>-0,027492</td>
+                                <td>97,29%</td>
+                                <td>2,71%</td>
+                                <td>1,35%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>16</td>
+                                <td>-0,054984</td>
+                                <td>94,65%</td>
+                                <td>5,35%</td>
+                                <td>2,64%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>32</td>
+                                <td>-0,109967</td>
+                                <td>89,59%</td>
+                                <td>10,41%</td>
+                                <td>5,06%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>64</td>
+                                <td>-0,219934</td>
+                                <td>80,26%</td>
+                                <td>19,74%</td>
+                                <td>9,33%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>128</td>
+                                <td>-0,439869</td>
+                                <td>64,42%</td>
+                                <td>35,58%</td>
+                                <td>15,84%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>256</td>
+                                <td>-0,879737</td>
+                                <td>41,49%</td>
+                                <td>58,51%</td>
+                                <td>22,92%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>512</td>
+                                <td>-1,759475</td>
+                                <td>17,22%</td>
+                                <td>82,78%</td>
+                                <td>24,28%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>1024</td>
+                                <td>-3,51895</td>
+                                <td>2,96%</td>
+                                <td>97,04%</td>
+                                <td>14,25%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>2048</td>
+                                <td>-7,037899</td>
+                                <td>0,09%</td>
+                                <td>99,91%</td>
+                                <td>2,09%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>4096</td>
+                                <td>-14,0758</td>
+                                <td>0,00%</td>
+                                <td>100,00%</td>
+                                <td>0,00%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td colspan="4">Ukupno</td>
+                                <td>100,00%</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                      </div>
+
+                      <!--zadnja tabela-->
+                    <div class="table-responsive col-11 mt-4">
+                      <table class="table table-striped table-hover table-bordered">
+                          <thead>
+                            <tr>
+                              <th colspan="6" class="text-center" scope="col">Prognoza učešća granulometrijskog sastava odminirane mase za He=20 m</th>
+                            </tr>
+                              <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Otvor sita x (cm)</th>
+                                <th scope="col">-(x/x<sub>c</sub>)<sup>n</sup></th>
+                                <th scope="col">R (zadržava se na situ)</th>
+                                <th scope="col">R (prolazi kroz sito)</th>
+                                <th scope="col">Učešće pojedinih frakcija</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="col" rowspan="15" class="align-middle" >Zastupljenost komada odminiranog materijala ili procentualna <br>zastupljenost komada većih od x (cm) određena na osnovu jednačine Rosin i Rammler</th>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>100%</td>
+                                <td>0,00%</td>
+                                <td>0,00%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>1</td>
+                                <td>-0,002342</td>
+                                <td>99,77%</td>
+                                <td>0,23%</td>
+                                <td>0,23%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>2</td>
+                                <td>-0,004685</td>
+                                <td>99,53%</td>
+                                <td>0,47%</td>
+                                <td>0,23%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>4</td>
+                                <td>-0,009369</td>
+                                <td>99,07%</td>
+                                <td>0,93%</td>
+                                <td>0,47%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>8</td>
+                                <td>-0,018738</td>
+                                <td>98,14%</td>
+                                <td>1,86%</td>
+                                <td>0,92%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>16</td>
+                                <td>-0,037476</td>
+                                <td>96,32%</td>
+                                <td>3,68%</td>
+                                <td>1,82%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>32</td>
+                                <td>-0,074953</td>
+                                <td>92,78%</td>
+                                <td>7,22%</td>
+                                <td>3,54%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>64</td>
+                                <td>-0,149905</td>
+                                <td>86,08%</td>
+                                <td>13,92%</td>
+                                <td>6,70%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>128</td>
+                                <td>-0,29981</td>
+                                <td>74,10%</td>
+                                <td>25,90%</td>
+                                <td>11,98%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>256</td>
+                                <td>-0,59962</td>
+                                <td>54,91%</td>
+                                <td>45,09%</td>
+                                <td>19,19%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>512</td>
+                                <td>-1,19924</td>
+                                <td>30,15%</td>
+                                <td>69,85%</td>
+                                <td>24,76%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>1024</td>
+                                <td>-2,398481</td>
+                                <td>9,09%</td>
+                                <td>90,91%</td>
+                                <td>21,06%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>2048</td>
+                                <td>-4,796961</td>
+                                <td>0,83%</td>
+                                <td>99,17%</td>
+                                <td>8,26%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td>4096</td>
+                                <td>-9,593923</td>
+                                <td>0,01%</td>
+                                <td>99,99%</td>
+                                <td>0,82%</td>
+                              </tr>
+                              <tr>
+                                
+                                <td colspan="4">Ukupno</td>
+                                <td>99,99%</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                      </div>
+          </div>
+        </div>
+      </div>
+     
+      
+
+    </div>
+</div>
+    <script src="script.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      
+    </script>
+  </body>
+</html>
